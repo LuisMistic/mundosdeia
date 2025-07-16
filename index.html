@@ -20,9 +20,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
 
     <!-- Chosen Palette: Digital Aurora (Dark Blue/Purple base with Neon Green/Blue/Pink accents) -->
-    <!-- Application Structure Plan: The application is a single-page, multi-section scrollable website. Navigation is handled by a fixed, dynamic header with smooth scrolling to relevant sections. This structure provides a continuous, immersive journey through the content. Submenus within the navigation enhance content organization and accessibility on both desktop and mobile. Interactive elements, including advanced animations (GSAP), dynamic 3D backgrounds (Three.js), reactive particle effects (Canvas), and subtle sound feedback (Tone.js), are integrated throughout. This design aims to create a highly engaging and immersive user experience, making the exploration of "AI Worlds" feel futuristic and dynamic. A new floating chatbot allows natural language interaction with an LLM, providing dynamic Q&A capabilities, now enhanced with context from the page content. -->
+    <!-- Application Structure Plan: The application is a single-page, multi-section scrollable website. Navigation is handled by a fixed, dynamic header with smooth scrolling to relevant sections. This structure provides a continuous, immersive journey through the content. Submenus within the navigation enhance content organization and accessibility on both desktop and mobile. Interactive elements, including advanced animations (GSAP), dynamic 3D backgrounds (Three.js), reactive particle effects (Canvas), and subtle sound feedback (Tone.js), are integrated throughout. This design aims to create a highly engaging and immersive user experience, making the exploration of "AI Worlds" feel futuristic and dynamic. A new floating chatbot allows natural language interaction with an LLM, providing dynamic Q&A capabilities, now enhanced with context from the page content and a typewriter effect for responses. Form submission is handled via Formspree. -->
     <!-- Visualization & Content Choices: 
-    1. Overall Navigation: Goal: Seamless exploration. Viz: Fixed navbar with smooth scroll and animated links. Interaction: Click/tap on links, mobile hamburger menu, floating navigation arrows. Justification: Provides clear, persistent navigation with enhanced visual feedback and direct section control. Library: GSAP ScrollToPlugin, Vanilla JS, Font Awesome.
+    1. Overall Navigation: Goal: Seamless exploration. Viz: Fixed navbar with smooth scroll and animated links. Interaction: Click/tap on links, mobile hamburger menu (now auto-closing), floating navigation arrows. Justification: Provides clear, persistent navigation with enhanced visual feedback and direct section control. Library: GSAP ScrollToPlugin, Vanilla JS, Font Awesome.
     2. Section Snapping: Goal: Immersive full-screen experience. Viz: Sections snap to full viewport height. Interaction: Scrolling. Justification: Ensures each section is viewed in its entirety, enhancing focus and visual impact. Library: CSS Scroll Snap, GSAP ScrollTrigger.
     3. Section Backgrounds: Goal: Immersive atmosphere. Viz: Dynamic particle effects (Canvas) for most sections, and an abstract 3D scene (Three.js) for the Home section. Interaction: Passive, reacts to mouse/touch movement. Justification: Enhances visual depth and reinforces the futuristic theme. Library: Vanilla JS Canvas, Three.js.
     4. Content Cards: Goal: Highlight key information. Viz: Glassmorphic styled cards with embedded dynamic canvas animations (mini-galaxy/star fields). Interaction: Hover effects (scale, rotate, shadow) and scroll-triggered animations. Justification: Adds visual interest and emphasizes content dynamically, making cards feel "alive" and unique. Library: Tailwind CSS, GSAP, Vanilla JS Canvas.
@@ -31,7 +31,8 @@
     7. Form Feedback: Goal: User confirmation. Viz: Custom modal/message box. Interaction: Form submission. Justification: Replaces disruptive browser alerts with a smoother, integrated UI element. Library: Vanilla JS.
     8. Audio Feedback: Goal: Enhance immersion. Viz: Subtle sound effects. Interaction: Clicks on navigation, button presses, notification appearance, chatbot messages. Justification: Adds an auditory layer to the interactive experience. Library: Tone.js.
     9. Cursor Effect: Goal: Enhance interactivity. Viz: Animated cursor trail. Interaction: Mouse/touch movement. Justification: Provides continuous visual feedback and a sense of responsiveness. Library: Vanilla JS Canvas.
-    10. Chatbot: Goal: Provide natural language interaction and information retrieval. Viz: Floating chat window with message display and input. Interaction: User types messages, AI responds. Justification: Offers a direct, conversational way to explore the "AI Worlds" concept, now with enhanced contextual awareness of the page content. Library: Vanilla JS, Gemini API.
+    10. Chatbot: Goal: Provide natural language interaction and information retrieval. Viz: Floating chat window with message display and input, with an animated eye icon. Interaction: User types messages, AI responds with a typewriter effect. Justification: Offers a direct, conversational way to explore the "AI Worlds" concept, now with enhanced contextual awareness of the page content and improved visual/auditory feedback. Library: Vanilla JS, Gemini API.
+    11. Email Submission: Goal: Enable contact form submissions. Viz: Standard HTML form. Interaction: Form submission handled by Formspree. Justification: Provides a functional contact method without server-side code. Library: Formspree.
     -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
@@ -399,8 +400,8 @@
         }
         .video-preview .fa-play-circle {
             position: absolute;
-            top: 50%;
-            left: 50%;
+            top: 1/2;
+            left: 1/2;
             transform: translate(-50%, -50%);
             font-size: 3rem;
             color: white;
@@ -434,6 +435,17 @@
             transform: scale(1.1);
             background: #00e676;
         }
+        #chatbot-toggle-btn i {
+            animation: blink 2s infinite ease-in-out; /* Adjusted animation for clearer blink */
+        }
+        @keyframes blink {
+            0% { opacity: 0.2; } /* Eye closed */
+            49% { opacity: 0.2; } /* Stay closed */
+            50% { opacity: 1; } /* Eye opens */
+            51% { opacity: 1; } /* Stay open */
+            100% { opacity: 0.2; } /* Closes again */
+        }
+
 
         #chatbot-container {
             position: fixed;
@@ -847,10 +859,10 @@
             <div id="contact-form" class="sub-section card transform rotate-3">
                 <h3 class="sub-section-title">Contáctanos</h3>
                 <p class="text-sm md:text-base">Explora colaboraciones o comparte tu visión del universo digital. Estamos ansiosos por escuchar tus ideas y construir el futuro juntos.</p>
-                <form id="contact-form-element">
-                    <input type="text" placeholder="Nombre" class="w-full p-2 mb-3 bg-transparent border border-blue-400 rounded text-white text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <input type="email" placeholder="Email" class="w-full p-2 mb-3 bg-transparent border border-blue-400 rounded text-white text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <textarea placeholder="Mensaje" class="w-full p-2 bg-transparent border border-blue-400 rounded text-white text-sm md:text-base h-24 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                <form id="contact-form-element" action="https://formspree.io/f/mrblgljg" method="POST">
+                    <input type="text" name="name" placeholder="Nombre" class="w-full p-2 mb-3 bg-transparent border border-blue-400 rounded text-white text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="email" name="_replyto" placeholder="Email" class="w-full p-2 mb-3 bg-transparent border border-blue-400 rounded text-white text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <textarea name="message" placeholder="Mensaje" class="w-full p-2 bg-transparent border border-blue-400 rounded text-white text-sm md:text-base h-24 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
                     <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-6 rounded-full mt-3 transform rotate-2 text-sm md:text-base transition duration-300 ease-in-out hover:scale-105">Enviar</button>
                 </form>
             </div>
@@ -880,19 +892,17 @@
 
     <!-- Chatbot Toggle Button -->
     <div id="chatbot-toggle-btn" class="flex items-center justify-center">
-        <i class="fas fa-comment-dots"></i>
+        <i class="fas fa-eye"></i> <!-- Changed to eye icon -->
     </div>
 
     <!-- Chatbot Container -->
     <div id="chatbot-container">
         <div id="chatbot-header">
-            <span>Chat con IA</span>
+            <span>Oráculo IA</span> <!-- Chatbot name -->
             <button id="chatbot-close-btn"><i class="fas fa-times"></i></button>
         </div>
         <div id="chat-messages">
-            <div class="chat-message ai">
-                <p>¡Hola! Soy tu asistente de IA de Mundos de IA. ¿En qué puedo ayudarte hoy?</p>
-            </div>
+            <!-- Initial welcome message will be added by JS -->
         </div>
         <div id="chat-input-area">
             <input type="text" id="chat-input" placeholder="Escribe tu mensaje..." class="flex-grow">
@@ -965,12 +975,11 @@
         const sections = gsap.utils.toArray('.section');
         function scrollToSection(sectionId) {
             const element = document.getElementById(sectionId);
-            // With scroll-snap-type and scroll-padding-top, simply scrolling to the element's top is often enough.
-            // The browser's native scroll-snap will handle the final alignment and padding.
+            const navbarHeight = document.querySelector('.navbar').offsetHeight; // Get current navbar height
             gsap.to(window, {
                 scrollTo: {
                     y: element,
-                    offsetY: 0 // Let scroll-padding-top handle the offset
+                    offsetY: navbarHeight // Use navbarHeight as offset
                 },
                 duration: 0.8,
                 ease: 'power2.out',
@@ -983,6 +992,13 @@
         // Hamburger Menu
         const hamburger = document.querySelector('.hamburger');
         const navLinks = document.querySelector('.nav-links');
+        
+        // Ensure menu is closed by default on mobile
+        if (window.innerWidth <= 768) {
+            navLinks.classList.remove('active');
+            hamburger.classList.remove('active');
+        }
+
         hamburger.addEventListener('click', () => {
             hamburger.classList.toggle('active');
             navLinks.classList.toggle('active');
@@ -1002,11 +1018,11 @@
             const submenu = item.querySelector('.submenu');
             mainLink.addEventListener('click', (e) => {
                 if (window.innerWidth <= 768) {
-                    e.preventDefault();
+                    e.preventDefault(); // Prevent default scroll for main link on mobile as we handle submenu toggle
                     navItems.forEach(i => {
                         if (i !== item) {
-                            i.querySelector('.submenu').classList.remove('active');
                             i.classList.remove('active');
+                            i.querySelector('.submenu').classList.remove('active');
                         }
                     });
                     item.classList.toggle('active');
@@ -1019,8 +1035,8 @@
                     e.preventDefault();
                     navItems.forEach(i => {
                         if (i !== item) {
-                            i.querySelector('.submenu').classList.remove('active');
                             i.classList.remove('active');
+                            i.querySelector('.submenu').classList.remove('active');
                         }
                     });
                     item.classList.toggle('active');
@@ -1030,23 +1046,31 @@
             });
         });
 
-        // Auto-close menu on mobile when clicking a link
-        const navLinksAll = document.querySelectorAll('.submenu a');
-        navLinksAll.forEach(link => {
-            link.addEventListener('click', () => {
+        // Auto-close menu on mobile when clicking any link within nav-links (main or submenu)
+        const allNavLinksInMenu = document.querySelectorAll('.nav-links a');
+        allNavLinksInMenu.forEach(link => {
+            link.addEventListener('click', (e) => {
                 if (window.innerWidth <= 768) {
+                    // Only prevent default if it's a submenu link, as main links already have it handled for toggle
+                    if (link.closest('.submenu')) {
+                        e.preventDefault(); 
+                    }
+                    
                     hamburger.classList.remove('active');
                     navLinks.classList.remove('active');
                     navItems.forEach(item => {
                         item.classList.remove('active');
                         item.querySelector('.submenu').classList.remove('active');
                     });
+                    // Scroll after menus are closed
                     scrollToSection(link.getAttribute('href').substring(1));
                 }
             });
             link.addEventListener('touchstart', (e) => {
                 if (window.innerWidth <= 768) {
-                    e.preventDefault();
+                    if (link.closest('.submenu')) {
+                        e.preventDefault();
+                    }
                     hamburger.classList.remove('active');
                     navLinks.classList.remove('active');
                     navItems.forEach(item => {
@@ -1057,6 +1081,7 @@
                 }
             });
         });
+
 
         // Navbar shrink on scroll
         window.addEventListener('scroll', () => {
@@ -1312,29 +1337,54 @@
         }
 
         // Form Validation with Animation
-        document.getElementById('contact-form-element').addEventListener('submit', (e) => {
+        document.getElementById('contact-form-element').addEventListener('submit', async (e) => {
             e.preventDefault();
             const form = e.target;
-            const name = form.querySelector('input[type="text"]').value;
-            const email = form.querySelector('input[type="email"]').value;
-            const message = form.querySelector('textarea').value;
+            const name = form.querySelector('input[name="name"]').value;
+            const email = form.querySelector('input[name="_replyto"]').value;
+            const message = form.querySelector('textarea[name="message"]').value;
 
             if (name && email && message) {
-                gsap.to(form, {
-                    opacity: 0,
-                    y: -30,
-                    rotate: 6,
-                    duration: 0.6,
-                    onComplete: () => {
-                        showModal('¡Mensaje Enviado!', 'Gracias por contactarnos. Te responderemos pronto.');
-                        gsap.to(form, { opacity: 1, y: 0, rotate: 3, duration: 0.6 });
-                        form.reset();
+                // Use Formspree to submit
+                const formData = new FormData(form);
+                try {
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+
+                    if (response.ok) {
+                        gsap.to(form, {
+                            opacity: 0,
+                            y: -30,
+                            rotate: 6,
+                            duration: 0.6,
+                            onComplete: () => {
+                                showModal('¡Mensaje Enviado!', 'Gracias por contactarnos. Te responderemos pronto.');
+                                gsap.to(form, { opacity: 1, y: 0, rotate: 3, duration: 0.6 });
+                                form.reset();
+                            }
+                        });
+                    } else {
+                        const data = await response.json();
+                        if (data.errors) {
+                            showModal('Error al Enviar', data.errors.map(error => error.message).join(', '));
+                        } else {
+                            showModal('Error al Enviar', 'Hubo un problema al enviar tu mensaje. Inténtalo de nuevo.');
+                        }
                     }
-                });
+                } catch (error) {
+                    console.error('Error de red o al enviar el formulario:', error);
+                    showModal('Error de Conexión', 'No se pudo conectar con el servidor. Por favor, revisa tu conexión a internet.');
+                }
             } else {
                 showModal('Error', 'Por favor, completa todos los campos.');
             }
         });
+
 
         document.getElementById('newsletter-form').addEventListener('submit', (e) => {
             e.preventDefault();
@@ -1635,7 +1685,7 @@
             }
         };
 
-        let chatHistory = [{ role: "model", parts: [{ text: "¡Hola! Soy tu asistente de IA de Mundos de IA. ¿En qué puedo ayudarte hoy?" }] }];
+        let chatHistory = []; // Start with an empty history, initial greeting handled by JS
 
         // Function to get the content of the currently visible section
         function getCurrentlyVisibleSectionContent() {
@@ -1664,14 +1714,41 @@
             const messageDiv = document.createElement('div');
             messageDiv.classList.add('chat-message');
             messageDiv.classList.add(sender);
-            messageDiv.innerHTML = `<p>${text}</p>`;
+            const pElement = document.createElement('p'); // Create a p tag for text
+            messageDiv.appendChild(pElement); // Append p tag to message div
+            
             if (isLoading) {
                 messageDiv.classList.add('loading');
-                messageDiv.innerHTML += '<span class="spinner"></span>';
+                const spinner = document.createElement('span');
+                spinner.classList.add('spinner');
+                messageDiv.appendChild(spinner);
             }
             chatMessages.appendChild(messageDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to bottom
-            return messageDiv; // Return the created messageDiv
+            return pElement; // Return the p element to type into
+        }
+
+        // Typewriter effect function
+        function typewriterEffect(element, text, delay = 10) { // Reduced delay for faster typing
+            let i = 0;
+            element.textContent = ''; // Clear previous text
+            function type() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    chatMessages.scrollTop = chatMessages.scrollHeight; // Keep scrolling
+                    setTimeout(type, delay);
+                } else {
+                    // Remove spinner if it's a loading message that finished typing
+                    const parentDiv = element.closest('.chat-message.loading');
+                    if (parentDiv) {
+                        parentDiv.classList.remove('loading');
+                        const spinner = parentDiv.querySelector('.spinner');
+                        if (spinner) spinner.remove();
+                    }
+                }
+            }
+            type();
         }
 
         // Function to send message to LLM
@@ -1682,7 +1759,7 @@
             // Add user message to history
             chatHistory.push({ role: "user", parts: [{ text: message }] });
 
-            const loadingMessage = addMessage('ai', 'Escribiendo...', true); // Now loadingMessage will be the div element
+            const loadingPElement = addMessage('ai', 'Escribiendo...', true); // Get the p element for loading text
 
             try {
                 const currentSectionContent = getCurrentlyVisibleSectionContent();
@@ -1709,7 +1786,7 @@
                 fullPayloadContents[fullPayloadContents.length - 1] = { role: "user", parts: [{ text: promptWithContext }] };
 
 
-                const apiKey = "AIzaSyA-yO7WxLNSYhTPBC9gQ2TMlEz9cKYvnhM"; // Canvas will automatically provide this
+                const apiKey = ""; // Canvas will automatically provide this
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
                 const response = await fetch(apiUrl, {
@@ -1727,23 +1804,23 @@
                     aiResponseText = result.candidates[0].content.parts[0].text;
                 }
 
-                // Update the loading message with the actual AI response
-                loadingMessage.classList.remove('loading');
-                loadingMessage.querySelector('p').textContent = aiResponseText;
-                const spinner = loadingMessage.querySelector('.spinner');
-                if (spinner) spinner.remove();
+                // Start typewriter effect for the AI response
+                typewriterEffect(loadingPElement, aiResponseText);
 
-                // Add AI response to history
+                // Add AI response to history after typing is complete (or immediately if not using typewriter for history)
                 chatHistory.push({ role: "model", parts: [{ text: aiResponseText }] });
 
                 if (synth) synth.triggerAttackRelease("F4", "16n"); // Sound for AI message received
 
             } catch (error) {
                 console.error('Error al llamar a la API de Gemini:', error);
-                loadingMessage.classList.remove('loading');
-                loadingMessage.querySelector('p').textContent = 'Error: No se pudo conectar con la IA. Inténtalo de nuevo.';
-                const spinner = loadingMessage.querySelector('.spinner');
-                if (spinner) spinner.remove();
+                loadingPElement.textContent = 'Error: No se pudo conectar con la IA. Inténtalo de nuevo.'; // Update the p element directly
+                const parentDiv = loadingPElement.closest('.chat-message.loading');
+                if (parentDiv) {
+                    parentDiv.classList.remove('loading');
+                    const spinner = parentDiv.querySelector('.spinner');
+                    if (spinner) spinner.remove();
+                }
             } finally {
                 chatMessages.scrollTop = chatMessages.scrollHeight; // Ensure scroll to bottom after response
             }
@@ -1751,7 +1828,11 @@
 
         // Event listeners for chatbot
         chatbotToggleBtn.addEventListener('click', () => {
-            chatbotContainer.classList.toggle('active');
+            const isActive = chatbotContainer.classList.toggle('active');
+            if (isActive && chatHistory.length === 0) { // Only add welcome if chat is empty and just opened
+                typewriterEffect(addMessage('ai', '', true), '¡Hola! Soy el Oráculo IA, tu asistente virtual en Mundos de IA. ¿En qué puedo ayudarte hoy?'); // Use typewriter for initial message
+                chatHistory.push({ role: "model", parts: [{ text: "¡Hola! Soy el Oráculo IA, tu asistente virtual en Mundos de IA. ¿En qué puedo ayudarte hoy?" }] });
+            }
             if (synth) synth.triggerAttackRelease("C5", "16n"); // Sound for chatbot toggle
         });
 
@@ -1778,9 +1859,10 @@
             }
         });
 
-        // Initial welcome message for chatbot
-        // This is already added in HTML, so no need to repeat here.
-        // addMessage('ai', '¡Hola! Soy tu asistente de IA de Mundos de IA. ¿En qué puedo ayudarte hoy?');
+        // Initial welcome message for chatbot when it's opened for the first time.
+        // This is now handled within the chatbotToggleBtn click listener.
+
+
     </script>
 </body>
 </html>
